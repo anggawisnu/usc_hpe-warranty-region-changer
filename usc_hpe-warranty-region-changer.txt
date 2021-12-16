@@ -1,0 +1,70 @@
+// ==UserScript==
+// @name         hpe-warranty-region-changer
+// @namespace    all
+// @version      0.5
+// @description  Helper button to set region selector to specific country
+// @author       Angga WISNU
+// @match        *://support.hpe.com/hpsc/wc/public/*
+// @grant        GM_addStyle
+// @homepage     https://github.com/anggawisnu/usc_hpe-warranty-region-changer
+// ==/UserScript==
+
+
+/****** Change below variables to suit yours ***********/
+var CountryNAME = 'Indonesia';
+var CountryID = 99;
+/*******************************************************/
+
+//start of script
+var numCountryToChange = document.querySelectorAll('td.ddlabel');
+
+if (numCountryToChange.length > 0) {
+    var zNode = document.createElement ('div');
+    zNode.innerHTML = '<button id="myButton" type="button" class="body">'
+                + 'Change All Region to ' + CountryNAME + '</button>'
+                ;
+    zNode.setAttribute ('id', 'myContainer');
+    document.body.appendChild (zNode);
+
+    //--- Activate the newly added button.
+    document.getElementById ("myButton").addEventListener (
+    "click", ButtonClickAction, false
+    );
+}
+
+
+function ButtonClickAction (zEvent) {
+    var numCountryToChange = document.querySelectorAll('td.ddlabel');
+    for (var setName, setCountry=0; setCountry < numCountryToChange.length; setCountry ++) {
+        numCountryToChange[setCountry].innerHTML = CountryNAME;
+        setName = 'countryList'+ setCountry + '_child';
+        var ultag = document.getElementById(setName);
+        var lists = ultag.getElementsByTagName('li');
+        var valtext = ultag.getElementsByClassName('ddlabel');
+        for (var selCounter=0; selCounter < 239; selCounter++) {
+            lists[selCounter].classList.remove('selected');
+        }
+        lists[CountryID].classList.add('selected');
+    }
+}
+
+//--- Style our newly added elements using CSS.
+GM_addStyle ( `
+    #myContainer {
+        position:               fixed;
+        bottom:                 100px;
+        right:                  50px;
+        font-size:              20px;
+        background:             #00b188;
+        border:                 1px solid red;
+        margin:                 5px;
+        opacity:                1;
+        z-index:                1100;
+        padding:              3px 3px;
+    }
+    #myButton {
+        cursor:                 pointer;
+        background:             #00b188;
+        color:                  white;
+    }
+` );
